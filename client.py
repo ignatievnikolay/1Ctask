@@ -2,7 +2,7 @@ import sqlite3
 import uuid
 
 
-conn = sqlite3.connect('TestDB.db')
+conn = sqlite3.connect('1Ctask.db')
 c = conn.cursor()
 
 
@@ -36,12 +36,12 @@ def recommend(desired_begin, desired_end, num_people: int):
               'OR (%s BETWEEN b.time_begin AND b.time_end)'
               'OR (%s < time_begin AND %s > time_end))' %
               (num_people, desired_begin, desired_end, desired_begin, desired_end))
-    return c.fetchall()
+    return set(c.fetchall())
 
 
 def get_users():
     c.execute('SELECT User.id from User')
-    return c.fetchall()
+    return set(c.fetchall())
 
 
 def user_valid(sign_in_id: str):
@@ -59,15 +59,14 @@ def add_user(name: str, surname: str):
 
 
 def main():
-    print('Write your user id')
     cur_user_id = -1
-    
     print('sign_in or create user')
     while True:
-        cmd = input().split(' ')
+        cmd = str(input()).split(' ')
         if cmd[0] == 'sign_in':
             if user_valid(sign_in_id=cmd[1]):
                 cur_user_id = cmd[1]
+                print('successfully signed in')
                 break
         if cmd[0] == 'create':
             new_user_id = add_user(name=cmd[1], surname=cmd[2])
