@@ -89,11 +89,13 @@ def main():
     while True:
         cmd = input().split(' ')
         if cmd[0] == 'exit':
+            print('exiting...')
             break
         if cmd[0] == 'recommend':
-            recommend(cmd[1], cmd[2], int(cmd[3]))
+            print(recommend(cmd[1], cmd[2], int(cmd[3])))
         if cmd[0] == 'book':
             book_room(cmd[1], cmd[2], cmd[3], cur_user_id, int(cmd[4]))
+            print('room successfully booked')
 
 
 if __name__ == '__main__':
