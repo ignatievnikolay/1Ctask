@@ -40,17 +40,29 @@ def recommend(desired_begin, desired_end, num_people: int):
 
 
 def get_users():
+    """
+    Возвращает множество айдищников пользователей
+    """
     c.execute('SELECT User.id from User')
     return set(c.fetchall())
 
 
 def user_valid(sign_in_id: str):
+    """
+    Возвращает TRUE, если польщователь с указанным sign_in_id существует
+    FALSE, если не существует
+    """
     if sign_in_id in get_users():
         return True
     return False
 
 
 def add_user(name: str, surname: str):
+    """
+    Регистрирует нового пользователя в системе
+    Добавляет в таблицу User в БД запись о пользователе
+    Генерирует и возвращает уникальный id пользователя
+    """
     user_id = str(uuid.uuid4())
     c.execute('INSERT INTO User '
               'VALUES (%s, %s, %s)' %
