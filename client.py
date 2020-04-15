@@ -8,12 +8,11 @@ c = conn.cursor()
 
 def book_room(room_id: str, time_begin, time_end, booker_id: str, num_people: int):
     """
-    Бронирует комнату с указанными данными
+    Бронирует комнату с указанными данными (создаёт соответствующую запись в таблице Booking в базе данных)
     """
     if room_id in recommend(time_begin, time_end, num_people):
         c.execute('INSERT INTO Booking VALUES (%s, %s, %s, %s, %s, %d)' %
                   (str(uuid.uuid4()), room_id, time_begin, time_end, booker_id, num_people))
-
 
 
 def recommend(desired_begin, desired_end, num_people: int):
@@ -22,6 +21,10 @@ def recommend(desired_begin, desired_end, num_people: int):
     Возвращает комнаты:
     1. В которых достаточно места
     2. Которые свободны на всё время бронирования
+
+    Как проверяется, подходит комната или нет:
+    1. Время начала и время конца не должны накладываться на уже существующую брони
+    2. Уже существующая бронь не должна целиком содержаться в нашей брони
     """
     c.execute('SELECT Room.id '
               'FROM Room EXCEPT '
@@ -71,7 +74,7 @@ def main():
             print('your user id is:', new_user_id)
     if cur_user_id == -1:
         return 0
-    
+
     while True:
         cmd = input().split(' ')
         if cmd[0] == 'exit':
